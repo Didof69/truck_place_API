@@ -5,6 +5,7 @@ import { UpdateParkingDto } from './dto/update-parking.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { User } from 'src/users/entities/user.entity';
 import { GetUser } from 'src/auth/get-user.decorator';
+import { Parking } from './entities/parking.entity';
 
 @Controller('parkings')
 export class ParkingsController {
@@ -14,7 +15,7 @@ export class ParkingsController {
   @UseGuards(AuthGuard())
   create(
     @Body() createParkingDto: CreateParkingDto,
-  ) {
+  ): Promise<Parking> {
     return this.parkingsService.create(createParkingDto);
   }
 

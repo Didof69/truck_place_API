@@ -5,6 +5,6 @@ export class Service {
     @PrimaryGeneratedColumn()
     service_id: number;
 
-    @Column()
+    @Column({nullable : false})
     service_name: string;
 }
