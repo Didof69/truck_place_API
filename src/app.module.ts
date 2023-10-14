@@ -10,6 +10,8 @@ import { Parking } from './parkings/entities/parking.entity';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { User } from './users/entities/user.entity';
+import { ServicesModule } from './services/services.module';
+import { Service } from './services/entities/service.entity';
 
 @Module({
   imports: [
@@ -22,11 +24,12 @@ import { User } from './users/entities/user.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Parking, User],
+      entities: [Parking, User, Service],
       synchronize: false,
     }),
     AuthModule,
     UsersModule,
+    ServicesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
