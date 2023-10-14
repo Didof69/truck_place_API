@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -8,28 +8,35 @@ import { Parking } from './entities/parking.entity';
 
 @Injectable()
 export class ParkingsService {
-
   constructor(
-    @InjectRepository(Parking) private parkingsRepository: Repository<Parking>
-  ) { }
-  
-  create(createParkingDto: CreateParkingDto) {
-    return 'This action adds a new parking';
+    @InjectRepository(Parking) private parkingsRepository: Repository<Parking>,
+  ) {}
+
+  async create(createParkingDto: CreateParkingDto) {
+    const newParking = this.parkingsRepository.create(createParkingDto);
+    const result = this.parkingsRepository.save(newParking)
+    return result;
   }
 
   findAll() {
     return this.parkingsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} parking`;
+  async findOne(id: number) {
+    const found = await this.parkingsRepository.findOneBy({ parking_id: id });
+    if (!found) {
+      throw new NotFoundException(`Parking with the id ${id} not found`);
+    }
+    return found;
   }
 
   update(id: number, updateParkingDto: UpdateParkingDto) {
     return `This action updates a #${id} parking`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} parking`;
+  async remove(id: number) {
+    const parking = await this.findOne(id);
+    const parkingRemoved= await this.parkingsRepository.remove(parking)
+    return parkingRemoved;
   }
 }

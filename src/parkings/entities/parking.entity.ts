@@ -30,7 +30,7 @@ export class Parking {
   @Column({ nullable: false, type: 'int' })
   nb_space_free: number;
 
-  @Column({ nullable: false, type: 'date' })
+  @Column({ nullable: false, type: 'timestamp' })
   registration_date: Date;
 
   @Column({ nullable: false })

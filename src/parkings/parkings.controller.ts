@@ -1,14 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, UnauthorizedException } from '@nestjs/common';
 import { ParkingsService } from './parkings.service';
 import { CreateParkingDto } from './dto/create-parking.dto';
 import { UpdateParkingDto } from './dto/update-parking.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { User } from 'src/users/entities/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Controller('parkings')
 export class ParkingsController {
   constructor(private readonly parkingsService: ParkingsService) {}
 
   @Post()
-  create(@Body() createParkingDto: CreateParkingDto) {
+  @UseGuards(AuthGuard())
+  create(
+    @Body() createParkingDto: CreateParkingDto,
+  ) {
     return this.parkingsService.create(createParkingDto);
   }
 
@@ -28,7 +34,11 @@ export class ParkingsController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  @UseGuards(AuthGuard())
+  remove(@Param('id') id: string, @GetUser() user: User) {
+       if (!user.admin) {
+         throw new UnauthorizedException('Droits admin nécessaires');
+       }
     return this.parkingsService.remove(+id);
   }
 }
