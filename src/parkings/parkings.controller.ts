@@ -30,6 +30,7 @@ export class ParkingsController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard())
   update(@Param('id') id: string, @Body() updateParkingDto: UpdateParkingDto) {
     return this.parkingsService.update(+id, updateParkingDto);
   }

@@ -30,8 +30,19 @@ export class ParkingsService {
     return found;
   }
 
-  update(id: number, updateParkingDto: UpdateParkingDto) {
-    return `This action updates a #${id} parking`;
+  async update(id: number, updateParkingDto: UpdateParkingDto) {
+    let parking = await this.findOne(id);
+
+    if (parking.services) {
+    parking.services = updateParkingDto.services;
+    }
+
+    const updatedParking = this.parkingsRepository.merge(
+      parking,
+      updateParkingDto,
+    );
+    const result = await this.parkingsRepository.save(updatedParking);
+    return result;
   }
 
   async remove(id: number) {

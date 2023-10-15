@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Service } from "src/services/entities/service.entity";
+import { User } from "src/users/entities/user.entity";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Parking {
@@ -50,4 +52,18 @@ export class Parking {
 
   @Column({ type: 'int' })
   photo_id: number;
+
+  @ManyToOne(() => User, (user) => user.user_id)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
+
+  @ManyToMany(() => Service, (service) => service.service_id, {
+    eager: true,
+  })
+  @JoinTable({
+    name: 'equip',
+    joinColumn: { name: 'parking_id', referencedColumnName: 'parking_id' },
+    inverseJoinColumn: { name: 'service_id', referencedColumnName: 'service_id' },
+  })
+  services: Service[];
 }

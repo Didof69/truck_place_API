@@ -1,4 +1,7 @@
-import { IsBoolean, IsISO8601, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsPositive, IsString, Max } from "class-validator";
+import { Type } from "class-transformer";
+import { IsArray, IsBoolean, IsISO8601, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsPositive, IsString, ValidateNested } from "class-validator";
+import { ServiceDto } from "src/services/dto/service.dto";
+import { Service } from "src/services/entities/service.entity";
 
 export class CreateParkingDto {
   @IsNotEmpty()
@@ -46,4 +49,9 @@ export class CreateParkingDto {
   user_id: number;
 
   photo_id: number;
+
+  @IsArray()
+  @ValidateNested({ each: true }) // Valide chaque élément du tableau
+  @Type(() => ServiceDto) // Utilisez le DTO de validation des Saison
+  services: Service[];
 }

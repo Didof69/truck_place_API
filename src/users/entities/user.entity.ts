@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Parking } from "src/parkings/entities/parking.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'user' })
 export class User {
@@ -25,4 +26,7 @@ export class User {
 
   @Column()
   photo_id: number;
+
+  @OneToMany(() => Parking, (parking) => parking.user)
+  parkings: Parking[]
 }
