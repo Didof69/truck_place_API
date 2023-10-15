@@ -1,6 +1,7 @@
+import { Opinion } from "src/opinions/entities/opinion.entity";
 import { Service } from "src/services/entities/service.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Parking {
@@ -63,7 +64,13 @@ export class Parking {
   @JoinTable({
     name: 'equip',
     joinColumn: { name: 'parking_id', referencedColumnName: 'parking_id' },
-    inverseJoinColumn: { name: 'service_id', referencedColumnName: 'service_id' },
+    inverseJoinColumn: {
+      name: 'service_id',
+      referencedColumnName: 'service_id',
+    },
   })
   services: Service[];
+
+  @OneToMany(() => Opinion, (opinion) => opinion.parking, { eager: true })
+  opinions: Opinion[];
 }

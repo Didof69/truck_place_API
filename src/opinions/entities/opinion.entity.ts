@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Parking } from "src/parkings/entities/parking.entity";
+import { Column, Entity, JoinColumn, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Opinion {
@@ -16,4 +17,8 @@ export class Opinion {
 
   @Column({ nullable: false, type: 'int' })
   parking_id: number;
+
+  @ManyToOne(() => Parking, (parking) => parking.opinions)
+  @JoinColumn({ name: 'parking_id' })
+  parking: Parking;
 }

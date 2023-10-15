@@ -14,7 +14,7 @@ export class ParkingsService {
 
   async create(createParkingDto: CreateParkingDto) {
     const newParking = this.parkingsRepository.create(createParkingDto);
-    const result = this.parkingsRepository.save(newParking)
+    const result = this.parkingsRepository.save(newParking);
     return result;
   }
 
@@ -33,21 +33,23 @@ export class ParkingsService {
   async update(id: number, updateParkingDto: UpdateParkingDto) {
     let parking = await this.findOne(id);
 
+    //permet de mettre à jour les services si des services étaient déjà enregistrés
     if (parking.services) {
-    parking.services = updateParkingDto.services;
+      parking.services = updateParkingDto.services;
     }
 
     const updatedParking = this.parkingsRepository.merge(
       parking,
       updateParkingDto,
     );
+
     const result = await this.parkingsRepository.save(updatedParking);
     return result;
   }
 
   async remove(id: number) {
     const parking = await this.findOne(id);
-    const parkingRemoved= await this.parkingsRepository.remove(parking)
+    const parkingRemoved = await this.parkingsRepository.remove(parking);
     return parkingRemoved;
   }
 }
