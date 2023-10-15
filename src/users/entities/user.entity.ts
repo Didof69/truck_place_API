@@ -1,3 +1,4 @@
+import { Opinion } from "src/opinions/entities/opinion.entity";
 import { Parking } from "src/parkings/entities/parking.entity";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -28,5 +29,8 @@ export class User {
   photo_id: number;
 
   @OneToMany(() => Parking, (parking) => parking.user)
-  parkings: Parking[]
+  parkings: Parking[];
+
+  @OneToMany(() => Opinion, (opinion) => opinion.parking)
+  opinions: Opinion[];
 }
