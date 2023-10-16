@@ -1,6 +1,7 @@
 import { Opinion } from "src/opinions/entities/opinion.entity";
 import { Parking } from "src/parkings/entities/parking.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Subscribe } from "src/subscribes/entities/subscribe.entity";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({ name: 'user' })
 export class User {
@@ -31,6 +32,11 @@ export class User {
   @OneToMany(() => Parking, (parking) => parking.user)
   parkings: Parking[];
 
+  //relation opinion
   @OneToMany(() => Opinion, (opinion) => opinion.parking)
   opinions: Opinion[];
+
+  //relation subscribe
+  @OneToMany(() => Opinion, (opinion) => opinion.parking)
+  subscribes: Opinion[];
 }

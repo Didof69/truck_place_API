@@ -1,5 +1,6 @@
 import { Opinion } from "src/opinions/entities/opinion.entity";
 import { Service } from "src/services/entities/service.entity";
+import { Subscribe } from "src/subscribes/entities/subscribe.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -17,7 +18,7 @@ export class Parking {
     precision: 9,
     scale: 6,
   })
-  longitude: number;
+  longitude: string;
 
   @Column({
     nullable: false,
@@ -25,7 +26,7 @@ export class Parking {
     precision: 9,
     scale: 6,
   })
-  latitude: number;
+  latitude: string;
 
   @Column({ nullable: false, type: 'int' })
   nb_space_all: number;
@@ -46,7 +47,7 @@ export class Parking {
   direction: string;
 
   @Column({ nullable: false, type: 'int' })
-  location_id: number;
+  insee_code: string;
 
   @Column({ nullable: false, type: 'int' })
   user_id: number;
@@ -71,6 +72,11 @@ export class Parking {
   })
   services: Service[];
 
+  //relation opinion
   @OneToMany(() => Opinion, (opinion) => opinion.parking, { eager: true })
   opinions: Opinion[];
+
+  //relation subscribe
+  @OneToMany(() => Subscribe, (subscribe) => subscribe.parking, { eager: true })
+  subscribes: Subscribe[];
 }
