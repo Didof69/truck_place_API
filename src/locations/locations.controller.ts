@@ -7,7 +7,7 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
-  @Get()
+  @Get() 
   findAll() {
     return this.locationsService.findAll();
   }
