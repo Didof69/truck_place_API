@@ -5,6 +5,7 @@ import { Opinion } from "src/opinions/entities/opinion.entity";
 import { ServiceDto } from "src/services/dto/service.dto";
 import { Service } from "src/services/entities/service.entity";
 import { CreateSubscribeDto } from "src/subscribes/dto/create-subscribe.dto";
+import { Subscribe } from "src/subscribes/entities/subscribe.entity";
 
 export class CreateParkingDto {
   @IsNotEmpty()
@@ -65,5 +66,5 @@ export class CreateParkingDto {
   @IsArray()
   @ValidateNested({ each: true }) // Valide chaque élément du tableau
   @Type(() => CreateSubscribeDto) // Utilisez le DTO de validation des Saison
-  subscribes: Opinion[];
+  subscribes: Subscribe[];
 }

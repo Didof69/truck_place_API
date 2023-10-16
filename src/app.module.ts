@@ -16,6 +16,8 @@ import { OpinionsModule } from './opinions/opinions.module';
 import { Opinion } from './opinions/entities/opinion.entity';
 import { SubscribesModule } from './subscribes/subscribes.module';
 import { Subscribe } from './subscribes/entities/subscribe.entity';
+import { LocationsModule } from './locations/locations.module';
+import { Location } from './locations/entities/location.entity';
 
 @Module({
   imports: [
@@ -28,7 +30,7 @@ import { Subscribe } from './subscribes/entities/subscribe.entity';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-      entities: [Parking, User, Service, Opinion, Subscribe],
+      entities: [Parking, User, Service, Opinion, Subscribe, Location],
       synchronize: false,
     }),
     AuthModule,
@@ -36,6 +38,7 @@ import { Subscribe } from './subscribes/entities/subscribe.entity';
     ServicesModule,
     OpinionsModule,
     SubscribesModule,
+    LocationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
