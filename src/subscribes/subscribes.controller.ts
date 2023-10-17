@@ -20,26 +20,8 @@ export class SubscribesController {
     return this.subscribesService.create(createSubscribeDto, user.user_id);
   }
 
-  @Get()
-  findAll() {
-    return this.subscribesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.subscribesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateSubscribeDto: UpdateSubscribeDto,
-  ) {
-    return this.subscribesService.update(+id, updateSubscribeDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.subscribesService.remove(+id);
+  @Get('parking/:id')
+  findSubscribedUsersByParkingId(@Param('id') id: string) {
+    return this.subscribesService.findSubscribedUsersByParkingId(+id);
   }
 }

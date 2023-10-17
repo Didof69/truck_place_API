@@ -13,15 +13,19 @@ export class ParkingsController {
 
   @Post()
   @UseGuards(AuthGuard())
-  create(
-    @Body() createParkingDto: CreateParkingDto,
-  ): Promise<Parking> {
+  create(@Body() createParkingDto: CreateParkingDto): Promise<Parking> {
     return this.parkingsService.create(createParkingDto);
   }
 
   @Get()
   findAll() {
     return this.parkingsService.findAll();
+  }
+
+  @Get(':pseudo')
+  @UseGuards(AuthGuard())
+  findLikedParkingByUserPseudo(@GetUser() user: User) {
+    return this.parkingsService.findLikedParkingByUserPseudo(user.pseudo);
   }
 
   @Get(':id')
@@ -38,9 +42,9 @@ export class ParkingsController {
   @Delete(':id')
   @UseGuards(AuthGuard())
   remove(@Param('id') id: string, @GetUser() user: User) {
-       if (!user.admin) {
-         throw new UnauthorizedException('Droits admin nécessaires');
-       }
+    if (!user.admin) {
+      throw new UnauthorizedException('Droits admin nécessaires');
+    }
     return this.parkingsService.remove(+id);
   }
 }

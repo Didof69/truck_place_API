@@ -30,6 +30,15 @@ export class ParkingsService {
     return found;
   }
 
+  async findLikedParkingByUserPseudo(userPseudo: string): Promise<Parking[]> {
+    return this.parkingsRepository
+      .createQueryBuilder('parking')
+      .innerJoin('like', 'like', 'like.parking_id = parking.parking_id')
+      .innerJoin('user', 'user', 'user.user_id = like.user_id')
+      .where('user.pseudo = :userPseudo', { userPseudo })
+      .getMany();
+  }
+
   async update(id: number, updateParkingDto: UpdateParkingDto) {
     let parking = await this.findOne(id);
 

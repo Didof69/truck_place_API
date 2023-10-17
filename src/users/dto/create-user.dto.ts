@@ -25,6 +25,6 @@ export class CreateUserDto {
   @IsNotEmpty()
   @IsBoolean()
   admin: boolean;
-  
+
   photo_id: number;
 }

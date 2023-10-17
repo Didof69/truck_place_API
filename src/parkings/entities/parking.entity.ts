@@ -59,9 +59,8 @@ export class Parking {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @ManyToMany(() => Service, (service) => service.service_id, {
-    eager: true,
-  })
+  //relation equip
+  @ManyToMany(() => Service, { eager: true })
   @JoinTable({
     name: 'equip',
     joinColumn: { name: 'parking_id', referencedColumnName: 'parking_id' },
@@ -73,10 +72,14 @@ export class Parking {
   services: Service[];
 
   //relation opinion
-  @OneToMany(() => Opinion, (opinion) => opinion.parking, { eager: true })
+  @OneToMany(() => Opinion, (opinion) => opinion.parking)
   opinions: Opinion[];
 
   //relation subscribe
-  @OneToMany(() => Subscribe, (subscribe) => subscribe.parking, { eager: true })
+  @OneToMany(() => Subscribe, (subscribe) => subscribe.parking)
   subscribes: Subscribe[];
+
+  //relation like
+  @ManyToMany(() => User, (user) => user.likedParkings)
+  users: User[];
 }

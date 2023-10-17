@@ -37,6 +37,20 @@ export class User {
   opinions: Opinion[];
 
   //relation subscribe
-  @OneToMany(() => Opinion, (opinion) => opinion.parking)
-  subscribes: Opinion[];
+  @OneToMany(() => Opinion, (subscribe) => subscribe.parking)
+  subscribes: Subscribe[];
+
+  //relation like
+  @ManyToMany(() => Parking, {
+    eager: true,
+  })
+  @JoinTable({
+    name: 'like',
+    joinColumn: { name: 'user_id', referencedColumnName: 'user_id' },
+    inverseJoinColumn: {
+      name: 'parking_id',
+      referencedColumnName: 'parking_id',
+    },
+  })
+  likedParkings: Parking[];
 }

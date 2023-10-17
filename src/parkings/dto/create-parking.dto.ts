@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsBoolean, IsISO8601, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsPositive, IsString, Length, ValidateNested } from "class-validator";
+import { IsArray, IsBoolean, IsISO8601, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsPositive, IsString, Length, Matches, ValidateNested } from "class-validator";
 import { CreateOpinionDto } from "src/opinions/dto/create-opinion.dto";
 import { Opinion } from "src/opinions/entities/opinion.entity";
 import { ServiceDto } from "src/services/dto/service.dto";
@@ -44,6 +44,7 @@ export class CreateParkingDto {
 
   @IsNotEmpty()
   @Length(5, 5)
+  @Matches(/[0-9AB]/)
   insee_code: string;
 
   @IsNotEmpty()
@@ -55,16 +56,6 @@ export class CreateParkingDto {
 
   @IsArray()
   @ValidateNested({ each: true }) // Valide chaque élément du tableau
-  @Type(() => ServiceDto) // Utilisez le DTO de validation des Saison
+  @Type(() => ServiceDto) // Utilisez le DTO de validation des services
   services: Service[];
-
-  @IsArray()
-  @ValidateNested({ each: true }) // Valide chaque élément du tableau
-  @Type(() => CreateOpinionDto) // Utilisez le DTO de validation des Saison
-  opinions: Opinion[];
-
-  @IsArray()
-  @ValidateNested({ each: true }) // Valide chaque élément du tableau
-  @Type(() => CreateSubscribeDto) // Utilisez le DTO de validation des Saison
-  subscribes: Subscribe[];
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubscribeDto } from './dto/create-subscribe.dto';
 import { UpdateSubscribeDto } from './dto/update-subscribe.dto';
 import { Subscribe } from './entities/subscribe.entity';
@@ -18,21 +18,21 @@ export class SubscribesService {
     const result = await this.subscribesRepository.save(newSubscribe);
     return result;
   }
+  
+  async findSubscribedUsersByParkingId(parking_id: number) {
+    const found = await this.subscribesRepository.find({
+      where: { parking_id },
+    });
 
-
-  findAll() {
-    return `This action returns all subscribes`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} subscribe`;
-  }
-
-  update(id: number, updateSubscribeDto: UpdateSubscribeDto) {
-    return `This action updates a #${id} subscribe`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} subscribe`;
+    if (!found) {
+      throw new NotFoundException(`There is not subscribed`);
+    }
+    const usersTab = [];
+    for (let i = 0; i < found.length; i++) {
+      if (found[i].unsubscribe_date > new Date()) {
+        usersTab.push(found[i].user_id);
+      }
+    }
+    return usersTab;
   }
 }
