@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSubscribeDto } from './dto/create-subscribe.dto';
-import { UpdateSubscribeDto } from './dto/update-subscribe.dto';
 import { Subscribe } from './entities/subscribe.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';

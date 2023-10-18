@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateOpinionDto } from './dto/create-opinion.dto';
 import { UpdateOpinionDto } from './dto/update-opinion.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -10,12 +10,12 @@ export class OpinionsService {
   constructor(
     @InjectRepository(Opinion)
     private opinionsRepository: Repository<Opinion>,
-  ) { }
-  
+  ) {}
+
   async create(createOpinionDto: CreateOpinionDto, user_id: number) {
     const newOpinion = this.opinionsRepository.create(createOpinionDto);
     newOpinion.user_id = user_id;
-    const result = await this.opinionsRepository.save(newOpinion)
+    const result = await this.opinionsRepository.save(newOpinion);
     return result;
   }
 
@@ -25,6 +25,18 @@ export class OpinionsService {
 
   findOne(id: number) {
     return `This action returns a #${id} opinion`;
+  }
+
+  async findOpinionsByParkingId(parking_id: number) {
+    const found = await this.opinionsRepository.find({
+      where: { parking_id },
+    });
+
+    if (!found) {
+      throw new NotFoundException(`There is not subscribed`);
+    }
+
+    return found;
   }
 
   remove(id: number) {

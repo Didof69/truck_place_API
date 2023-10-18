@@ -21,7 +21,7 @@ export class SubscribesController {
   }
 
   @Get('parking/:id')
-  findSubscribedUsersByParkingId(@Param('id') id: string) {
+  findSubscribedUsersByParkingId(@Param('id') id: string) {    
     return this.subscribesService.findSubscribedUsersByParkingId(+id);
   }
 }

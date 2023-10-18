@@ -24,6 +24,11 @@ export class OpinionsController {
     return this.opinionsService.findAll();
   }
 
+  @Get('parking/:id')
+  findOpinionsParkingId(@Param('id') id: string) {
+    return this.opinionsService.findOpinionsByParkingId(+id);
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard())
   remove(@Param('id') id: string, @GetUser() user: User) {
