@@ -13,8 +13,8 @@ export class ParkingsController {
 
   @Post()
   @UseGuards(AuthGuard())
-  create(@Body() createParkingDto: CreateParkingDto): Promise<Parking> {
-    return this.parkingsService.create(createParkingDto);
+  create(@Body() createParkingDto: CreateParkingDto, @GetUser() user:User): Promise<Parking> {
+    return this.parkingsService.create(createParkingDto, user.user_id);
   }
 
   @Get()
@@ -22,7 +22,7 @@ export class ParkingsController {
     return this.parkingsService.findAll();
   }
 
-  @Get(':pseudo')
+  @Get('liked')
   @UseGuards(AuthGuard())
   findLikedParkingByUserPseudo(@GetUser() user: User) {
     return this.parkingsService.findLikedParkingByUserPseudo(user.pseudo);

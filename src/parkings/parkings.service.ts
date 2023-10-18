@@ -12,8 +12,9 @@ export class ParkingsService {
     @InjectRepository(Parking) private parkingsRepository: Repository<Parking>,
   ) {}
 
-  async create(createParkingDto: CreateParkingDto) {
+  async create(createParkingDto: CreateParkingDto, user_id:number) {
     const newParking = this.parkingsRepository.create(createParkingDto);
+    newParking.user_id = user_id;
     const result = this.parkingsRepository.save(newParking);
     return result;
   }
@@ -31,12 +32,13 @@ export class ParkingsService {
   }
 
   async findLikedParkingByUserPseudo(userPseudo: string): Promise<Parking[]> {
-    return this.parkingsRepository
+    const likedParkings = await this.parkingsRepository
       .createQueryBuilder('parking')
       .innerJoin('like', 'like', 'like.parking_id = parking.parking_id')
       .innerJoin('user', 'user', 'user.user_id = like.user_id')
       .where('user.pseudo = :userPseudo', { userPseudo })
       .getMany();
+    return likedParkings
   }
 
   async update(id: number, updateParkingDto: UpdateParkingDto) {
