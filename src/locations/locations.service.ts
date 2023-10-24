@@ -13,5 +13,10 @@ export class LocationsService {
   
     findAll() {
     return this.locationsRepository.find();
-  }
+    }
+  
+  findLocationByInseeCode(insee_code:string) {
+    const found = this.locationsRepository.findOneBy({ insee_code })
+    return found
+    }
 }

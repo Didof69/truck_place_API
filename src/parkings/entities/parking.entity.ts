@@ -18,7 +18,7 @@ export class Parking {
     precision: 9,
     scale: 6,
   })
-  longitude: string;
+  latitude: string;
 
   @Column({
     nullable: false,
@@ -26,7 +26,7 @@ export class Parking {
     precision: 9,
     scale: 6,
   })
-  latitude: string;
+  longitude: string;
 
   @Column({ nullable: false, type: 'int' })
   nb_space_all: number;

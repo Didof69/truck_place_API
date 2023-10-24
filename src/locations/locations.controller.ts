@@ -7,8 +7,14 @@ import { UpdateLocationDto } from './dto/update-location.dto';
 export class LocationsController {
   constructor(private readonly locationsService: LocationsService) {}
 
-  @Get() 
+  @Get()
   findAll() {
     return this.locationsService.findAll();
   }
+
+  @Get(':insee_code')
+  findLocationByInseeCode(@Param('insee_code') insee_code:string) {
+    return this.locationsService.findLocationByInseeCode(insee_code);
+  }
+
 }
