@@ -16,7 +16,7 @@ export class AuthService {
   ) {}
 
   async register(createAuthDto: CreateAuthDto) {
-    const { pseudo, user_name, firstname, email, password, admin } =
+    const { pseudo, user_name, firstname, email, password, admin, is_delete } =
       createAuthDto;
 
     // hashage du mot de passe
@@ -31,6 +31,7 @@ export class AuthService {
       email,
       password: hashedPassword,
       admin: false,
+      is_delete: false, //gère le delete d'un User et la sauvegarde des ses avis et parkings
     });
 
     try {

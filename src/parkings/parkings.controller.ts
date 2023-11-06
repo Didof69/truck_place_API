@@ -13,7 +13,10 @@ export class ParkingsController {
 
   @Post()
   @UseGuards(AuthGuard())
-  create(@Body() createParkingDto: CreateParkingDto, @GetUser() user:User): Promise<Parking> {
+  create(
+    @Body() createParkingDto: CreateParkingDto,
+    @GetUser() user: User,
+  ): Promise<Parking> {
     return this.parkingsService.create(createParkingDto, user.user_id);
   }
 
@@ -39,11 +42,21 @@ export class ParkingsController {
     return this.parkingsService.update(+id, updateParkingDto);
   }
 
+  @Post(':id')
+  @UseGuards(AuthGuard())
+  likeParking(@Param('id') id: string, @GetUser() user: User) {
+
+    return this.parkingsService.likeParking(+id, user.pseudo);
+  }
+
   @Delete(':id')
   @UseGuards(AuthGuard())
-  remove(@Param('id') id: string, @GetUser() user: User) {
-    if (!user.admin) {
-      throw new UnauthorizedException('Droits admin nécessaires');
+  async remove(@Param('id') id: string, @GetUser() user: User) {
+     const parkingToRemove = await this.findOne(id);
+    if (parkingToRemove.user_id !== user.user_id) {
+      if (!user.admin) {
+      throw new UnauthorizedException('Droits insuffisant pour supprimer');
+    }
     }
     return this.parkingsService.remove(+id);
   }

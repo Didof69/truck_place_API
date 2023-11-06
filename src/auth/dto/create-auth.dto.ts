@@ -25,4 +25,8 @@ export class CreateAuthDto {
   @IsNotEmpty()
   @IsBoolean()
   admin: boolean;
+
+  @IsNotEmpty()
+  @IsBoolean()
+  is_delete: boolean;
 }

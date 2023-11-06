@@ -15,8 +15,8 @@ export class LocationsService {
     return this.locationsRepository.find();
     }
   
-  findLocationByInseeCode(insee_code:string) {
-    const found = this.locationsRepository.findOneBy({ insee_code })
+  async findLocationByInseeCode(insee_code:string) {
+    const found = await this.locationsRepository.findOneBy({ insee_code })
     return found
     }
 }

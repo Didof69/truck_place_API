@@ -17,7 +17,7 @@ export class SubscribesService {
     const result = await this.subscribesRepository.save(newSubscribe);
     return result;
   }
-  
+
   async findSubscribedUsersByParkingId(parking_id: number) {
     const found = await this.subscribesRepository.find({
       where: { parking_id },
@@ -33,5 +33,23 @@ export class SubscribesService {
       }
     }
     return usersTab;
+  }
+
+  async findSubscribedPakingsByUserId(user_id: number) {
+    const found = await this.subscribesRepository.find({
+      where: { user_id },
+    });
+
+    if (!found) {
+      throw new NotFoundException(`There is not subscribed`);
+    }
+
+    const parkingsTab = [];
+    for (let i = 0; i < found.length; i++) {
+      if (found[i].unsubscribe_date > new Date()) {
+        parkingsTab.push(found[i].parking);
+      }
+    }
+    return parkingsTab;
   }
 }

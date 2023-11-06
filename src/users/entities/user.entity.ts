@@ -29,6 +29,9 @@ export class User {
   @Column()
   photo_id: number;
 
+  @Column({ nullable: false })
+  is_delete: boolean;
+
   @OneToMany(() => Parking, (parking) => parking.user)
   parkings: Parking[];
 

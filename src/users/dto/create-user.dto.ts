@@ -26,5 +26,11 @@ export class CreateUserDto {
   @IsBoolean()
   admin: boolean;
 
+ @IsNotEmpty()
+  @IsBoolean()
+  is_delete: boolean;
+  
   photo_id: number;
 }
+ 
+ 

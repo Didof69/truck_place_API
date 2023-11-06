@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { SubscribesService } from './subscribes.service';
 import { CreateSubscribeDto } from './dto/create-subscribe.dto';
-import { UpdateSubscribeDto } from './dto/update-subscribe.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/get-user.decorator';
 import { User } from 'src/users/entities/user.entity';
@@ -21,7 +20,13 @@ export class SubscribesController {
   }
 
   @Get('parking/:id')
-  findSubscribedUsersByParkingId(@Param('id') id: string) {    
+  findSubscribedUsersByParkingId(@Param('id') id: string) {
     return this.subscribesService.findSubscribedUsersByParkingId(+id);
+  }
+
+  @Get()
+  @UseGuards(AuthGuard())
+  findSubscribedParkingsByUserId(@GetUser() user: User) {
+    return this.subscribesService.findSubscribedPakingsByUserId(user.user_id);
   }
 }

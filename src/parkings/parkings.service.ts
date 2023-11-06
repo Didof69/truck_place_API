@@ -19,6 +19,11 @@ export class ParkingsService {
     return result;
   }
 
+  async likeParking(parking_id: number, pseudo: string) {
+
+    return
+  }
+
   findAll() {
     return this.parkingsRepository.find();
   }

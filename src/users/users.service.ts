@@ -1,15 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository, Timestamp } from 'typeorm';
-import { Parking } from 'src/parkings/entities/parking.entity';
+import { Repository } from 'typeorm';
+// import { ParkingsService } from 'src/parkings/parkings.service';
+
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    // private parkingsService: ParkingsService,
   ) {}
 
   findAll() {
@@ -24,11 +26,50 @@ export class UsersService {
     return found;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(pseudo: string, updateUserDto: UpdateUserDto) {
+    const user = await this.findOne(pseudo);
+
+    //met à jour les parkings favoris
+    if (user.likedParkings) {
+      user.likedParkings = updateUserDto.likedParking;
+    }
+
+    const updatedUser = this.usersRepository.merge(user, updateUserDto);
+
+    const result = await this.usersRepository.save(updatedUser);
+    return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(pseudo: string, user: User) {
+    const userToDelete = await this.findOne(pseudo);
+    if (userToDelete.pseudo!==user.pseudo) {
+      if (!user.admin) {
+        throw new ForbiddenException(
+          `Vous ne detenez pas les droits supprimer ce profil.`,
+        );
+      }
+    }
+
+    //supprime les données perso du user
+    userToDelete.pseudo = "anonyme";
+    userToDelete.email = "email@email.fr";
+    userToDelete.firstname = "anonyme";
+    userToDelete.user_name = "anonyme";
+    userToDelete.password = "************************************************************";
+    userToDelete.photo_id = null;
+    userToDelete.likedParkings = [];
+    userToDelete.subscribes = [];
+
+    // if (userToDelete.parkings) {
+    //   userToDelete.parkings.forEach(parking => {
+    //     if (!parking.public_view) {
+    //       this.parkingsService.remove(parking.parking_id)
+    //     }
+    //   });
+    // }
+
+    const deletedUser = this.usersRepository.merge(user, userToDelete);
+    const response = await this.usersRepository.save(deletedUser)
+    return response;
   }
 }

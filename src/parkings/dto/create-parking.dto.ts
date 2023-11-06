@@ -1,11 +1,7 @@
 import { Type } from "class-transformer";
 import { IsArray, IsBoolean, IsISO8601, IsInt, IsLatitude, IsLongitude, IsNotEmpty, IsPositive, IsString, Length, Matches, ValidateNested } from "class-validator";
-import { CreateOpinionDto } from "src/opinions/dto/create-opinion.dto";
-import { Opinion } from "src/opinions/entities/opinion.entity";
 import { ServiceDto } from "src/services/dto/service.dto";
 import { Service } from "src/services/entities/service.entity";
-import { CreateSubscribeDto } from "src/subscribes/dto/create-subscribe.dto";
-import { Subscribe } from "src/subscribes/entities/subscribe.entity";
 
 export class CreateParkingDto {
   @IsNotEmpty()
@@ -27,7 +23,6 @@ export class CreateParkingDto {
 
   @IsNotEmpty()
   @IsInt()
-  @IsPositive()
   nb_space_free: number;
 
   @IsNotEmpty()
