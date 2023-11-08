@@ -18,6 +18,16 @@ export class SubscribesService {
     return result;
   }
 
+  async findOne(id: number) {
+    const found = await this.subscribesRepository.findOneBy({
+      subscribe_id: id,
+    });
+    if (!found) {
+      throw new NotFoundException(`Susbcription with the id ${id} not found`);
+    }
+    return found;
+  }
+
   async findSubscribedUsersByParkingId(parking_id: number) {
     const found = await this.subscribesRepository.find({
       where: { parking_id },
@@ -52,5 +62,11 @@ export class SubscribesService {
       }
     });
     return parkingsTab;
+  }
+
+  async remove(id: number) {
+    const subscribe = await this.findOne(id);
+    const subscribeRemoved = await this.subscribesRepository.remove(subscribe);
+    return subscribeRemoved;
   }
 }

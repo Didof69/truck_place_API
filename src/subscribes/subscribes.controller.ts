@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards, Delete, UnauthorizedException } from '@nestjs/common';
 import { SubscribesService } from './subscribes.service';
 import { CreateSubscribeDto } from './dto/create-subscribe.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -19,6 +19,11 @@ export class SubscribesController {
     return this.subscribesService.create(createSubscribeDto, user.user_id);
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.subscribesService.findOne(+id);
+  }
+
   @Get('parking/:id')
   findSubscribedUsersByParkingId(@Param('id') id: string) {
     return this.subscribesService.findSubscribedUsersByParkingId(+id);
@@ -28,5 +33,17 @@ export class SubscribesController {
   @UseGuards(AuthGuard())
   findSubscribedParkingsByUserId(@GetUser() user: User) {
     return this.subscribesService.findSubscribedPakingsByUserId(user.user_id);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard())
+  async remove(@Param('id') id: string, @GetUser() user: User) {
+    const subscribeToRemove = await this.findOne(id);
+    if (subscribeToRemove.user_id !== user.user_id) {
+      if (!user.admin) {
+        throw new UnauthorizedException('Droits insuffisant pour supprimer');
+      }
+    }
+    return this.subscribesService.remove(+id);
   }
 }
