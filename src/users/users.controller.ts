@@ -16,6 +16,7 @@ export class UsersController {
   }
 
   @Patch(':id')
+  @UseGuards(AuthGuard())
   update(@Body() updateUserDto: UpdateUserDto, @GetUser() user: User) {
     return this.usersService.update(user.pseudo, updateUserDto);
   }

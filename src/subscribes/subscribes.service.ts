@@ -27,11 +27,11 @@ export class SubscribesService {
       throw new NotFoundException(`There is not subscribed`);
     }
     const usersTab = [];
-    for (let i = 0; i < found.length; i++) {
-      if (found[i].unsubscribe_date > new Date()) {
-        usersTab.push(found[i].user_id);
+    found.forEach((user) => {
+      if (user.unsubscribe_date > new Date()) {
+        usersTab.push(user);
       }
-    }
+    });
     return usersTab;
   }
 
@@ -45,11 +45,12 @@ export class SubscribesService {
     }
 
     const parkingsTab = [];
-    for (let i = 0; i < found.length; i++) {
-      if (found[i].unsubscribe_date > new Date()) {
-        parkingsTab.push(found[i].parking);
+
+    found.forEach((parking) => {
+      if (parking.unsubscribe_date > new Date()) {
+        parkingsTab.push(parking);
       }
-    }
+    });
     return parkingsTab;
   }
 }

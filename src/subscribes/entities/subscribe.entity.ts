@@ -20,7 +20,7 @@ export class Subscribe {
   @JoinColumn({ name: 'parking_id' })
   parking: Parking;
 
-  @ManyToOne(() => User, (user) => user.subscribes, { eager: true })
+  @ManyToOne(() => User, (user) => user.subscribes)
   @JoinColumn({ name: 'user_id' })
   user: User;
 }

@@ -55,5 +55,6 @@ export class User {
       referencedColumnName: 'parking_id',
     },
   })
+    
   likedParkings: Parking[];
 }
