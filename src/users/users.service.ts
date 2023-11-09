@@ -15,9 +15,8 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
-  ) // private parkingsService: ParkingsService,
-  {}
+    private usersRepository: Repository<User>, // private parkingsService: ParkingsService,
+  ) {}
 
   findAll() {
     return `This action returns all users`;
@@ -39,10 +38,18 @@ export class UsersService {
       user.likedParkings = updateUserDto.likedParking;
     }
 
-    const updatedUser = this.usersRepository.merge(user, updateUserDto);
+    try {
+      const updatedUser = this.usersRepository.merge(user, updateUserDto);
 
-    const result = await this.usersRepository.save(updatedUser);
-    return result;
+      const result = await this.usersRepository.save(updatedUser);
+      return result;
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('pseudo or email already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 
   async remove(pseudo: string, user: User) {
@@ -74,18 +81,8 @@ export class UsersService {
     //   });
     // }
 
-    try {
-      // enregistrement de l'entité user
-      const deletedUser = this.usersRepository.merge(user, userToDelete);
-      const response = await this.usersRepository.save(deletedUser);
-      return response;
-    } catch (error) {
-      // gestion des erreurs
-      if (error.code === '23505') {
-        throw new ConflictException('pseudo or email already exists');
-      } else {
-        throw new InternalServerErrorException();
-      }
-    }
+    const deletedUser = this.usersRepository.merge(user, userToDelete);
+    const response = await this.usersRepository.save(deletedUser);
+    return response;
   }
 }
