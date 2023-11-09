@@ -1,18 +1,23 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 // import { ParkingsService } from 'src/parkings/parkings.service';
 
-
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    // private parkingsService: ParkingsService,
-  ) {}
+  ) // private parkingsService: ParkingsService,
+  {}
 
   findAll() {
     return `This action returns all users`;
@@ -42,7 +47,7 @@ export class UsersService {
 
   async remove(pseudo: string, user: User) {
     const userToDelete = await this.findOne(pseudo);
-    if (userToDelete.pseudo!==user.pseudo) {
+    if (userToDelete.pseudo !== user.pseudo) {
       if (!user.admin) {
         throw new ForbiddenException(
           `Vous ne detenez pas les droits supprimer ce profil.`,
@@ -51,11 +56,12 @@ export class UsersService {
     }
 
     //supprime les données perso du user
-    userToDelete.pseudo = "anonyme";
-    userToDelete.email = "email@email.fr";
-    userToDelete.firstname = "anonyme";
-    userToDelete.user_name = "anonyme";
-    userToDelete.password = "************************************************************";
+    userToDelete.pseudo = `anonyme${user.user_id}`;
+    userToDelete.email = `email${user.user_id}@email.fr`;
+    userToDelete.firstname = 'anonyme';
+    userToDelete.user_name = 'anonyme';
+    userToDelete.password =
+      '************************************************************';
     userToDelete.photo_id = null;
     userToDelete.likedParkings = [];
     userToDelete.subscribes = [];
@@ -68,8 +74,18 @@ export class UsersService {
     //   });
     // }
 
-    const deletedUser = this.usersRepository.merge(user, userToDelete);
-    const response = await this.usersRepository.save(deletedUser)
-    return response;
+    try {
+      // enregistrement de l'entité user
+      const deletedUser = this.usersRepository.merge(user, userToDelete);
+      const response = await this.usersRepository.save(deletedUser);
+      return response;
+    } catch (error) {
+      // gestion des erreurs
+      if (error.code === '23505') {
+        throw new ConflictException('pseudo or email already exists');
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
   }
 }
