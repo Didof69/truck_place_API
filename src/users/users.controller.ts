@@ -10,6 +10,17 @@ import { GetUser } from 'src/auth/get-user.decorator';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('admin')
+  @UseGuards(AuthGuard())
+  findAll(@GetUser() user: User) {
+       if (!user.admin) {
+         throw new ForbiddenException(
+           `Vous ne detenez pas les droits nécessaires.`,
+         );
+       }
+    return this.usersService.findAll();
+  }
+
   @Get() //pour que l'utilisateur puisse accéder à son profil
   findOne(@GetUser() user: User) {
     return this.usersService.findOne(user.pseudo);
