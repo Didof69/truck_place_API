@@ -1,8 +1,17 @@
-import { Opinion } from "src/opinions/entities/opinion.entity";
-import { Service } from "src/services/entities/service.entity";
-import { Subscribe } from "src/subscribes/entities/subscribe.entity";
-import { User } from "src/users/entities/user.entity";
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Opinion } from 'src/opinions/entities/opinion.entity';
+import { Service } from 'src/services/entities/service.entity';
+import { Subscribe } from 'src/subscribes/entities/subscribe.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Parking {
@@ -60,7 +69,7 @@ export class Parking {
   user: User;
 
   //relation equip
-  @ManyToMany(() => Service, { eager: true })
+  @ManyToMany(() => Service, { eager: true, cascade: true })
   @JoinTable({
     name: 'equip',
     joinColumn: { name: 'parking_id', referencedColumnName: 'parking_id' },
@@ -72,14 +81,24 @@ export class Parking {
   services: Service[];
 
   //relation opinion
-  @OneToMany(() => Opinion, (opinion) => opinion.parking)
+  @OneToMany(() => Opinion, (opinion) => opinion.parking, { cascade: true })
   opinions: Opinion[];
 
   //relation subscribe
-  @OneToMany(() => Subscribe, (subscribe) => subscribe.parking)
+  @OneToMany(() => Subscribe, (subscribe) => subscribe.parking, {
+    cascade: true,
+  })
   subscribes: Subscribe[];
 
   //relation like
   @ManyToMany(() => User, (user) => user.likedParkings)
+  @JoinTable({
+    name: 'like',
+    joinColumn: { name: 'parking_id', referencedColumnName: 'parking_id' },
+    inverseJoinColumn: {
+      name: 'user_id',
+      referencedColumnName: 'user_id',
+    },
+  })
   users: User[];
 }

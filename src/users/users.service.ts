@@ -63,8 +63,8 @@ export class UsersService {
     }
 
     //supprime les données perso du user
-    userToDelete.pseudo = `anonyme${user.user_id}`;
-    userToDelete.email = `email${user.user_id}@email.fr`;
+    userToDelete.pseudo = `anonyme${userToDelete.user_id}`;
+    userToDelete.email = `email${userToDelete.user_id}@email.fr`;
     userToDelete.firstname = 'anonyme';
     userToDelete.user_name = 'anonyme';
     userToDelete.password =
@@ -73,6 +73,8 @@ export class UsersService {
     userToDelete.likedParkings = [];
     userToDelete.subscribes = [];
 
+    console.log(userToDelete);
+    
     // if (userToDelete.parkings) {
     //   userToDelete.parkings.forEach(parking => {
     //     if (!parking.public_view) {

@@ -50,7 +50,7 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-	const { pseudo, password } = loginDto;
+	const { pseudo, password } = loginDto;//extraction de valeur et création de constante (destructuration)
   const user = await this.usersRepository.findOneBy({ pseudo });
 
   if (user && (await bcrypt.compare(password, user.password))) {

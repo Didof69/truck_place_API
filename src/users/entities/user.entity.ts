@@ -32,7 +32,7 @@ export class User {
   @Column({ nullable: false })
   is_delete: boolean;
 
-  @OneToMany(() => Parking, (parking) => parking.user)
+  @OneToMany(() => Parking, (parking) => parking.user, {cascade:true})
   parkings: Parking[];
 
   //relation opinion
@@ -44,9 +44,7 @@ export class User {
   subscribes: Subscribe[];
 
   //relation like
-  @ManyToMany(() => Parking, {
-    eager: true,
-  })
+  @ManyToMany(() => Parking, {eager: true, cascade:true})
   @JoinTable({
     name: 'like',
     joinColumn: { name: 'user_id', referencedColumnName: 'user_id' },
