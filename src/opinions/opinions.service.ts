@@ -34,8 +34,4 @@ export class OpinionsService {
 
     return found;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} opinion`;
-  }
 }

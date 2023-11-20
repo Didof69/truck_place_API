@@ -28,13 +28,4 @@ export class OpinionsController {
   findOpinionsParkingId(@Param('id') id: string) {
     return this.opinionsService.findOpinionsByParkingId(+id);
   }
-
-  @Delete(':id')
-  @UseGuards(AuthGuard())
-  remove(@Param('id') id: string, @GetUser() user: User) {
-    if (!user.admin) {
-      throw new UnauthorizedException('Droits admin nécessaires');
-    }
-    return this.opinionsService.remove(+id);
-  }
 }

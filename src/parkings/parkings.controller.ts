@@ -31,11 +31,13 @@ export class ParkingsController {
   }
 
   @Get(':id/likes')
+  @UseGuards(AuthGuard())
   findLikesForParking(@Param('id') id: string) {
     return this.parkingsService.getLikesForParking(+id);
   }
 
   @Get(':id/subscribes')
+  @UseGuards(AuthGuard())
   findSubscribesForParking(@Param('id') id: string) {
     return this.parkingsService.getSubscribesForParking(+id);
   }

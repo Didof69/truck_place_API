@@ -77,9 +77,9 @@ export class ParkingsService {
     getLikesForParking.forEach(() => {
       const query = `
       DELETE FROM "like"
-      WHERE "like"."parking_id" = $1 AND "like"."user_id" = $2
+      WHERE "like"."parking_id" = $1
     `;
-      this.parkingsRepository.query(query, [parking_id, user_id]);
+      this.parkingsRepository.query(query, [parking_id]);
     });
 
     //supprime tous les abonnements concernant le parking
