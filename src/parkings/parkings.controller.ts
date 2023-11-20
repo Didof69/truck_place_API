@@ -25,15 +25,19 @@ export class ParkingsController {
     return this.parkingsService.findAll();
   }
 
-  @Get('liked')
-  @UseGuards(AuthGuard())
-  findLikedParkingByUserPseudo(@GetUser() user: User) {
-    return this.parkingsService.findLikedParkingByUserPseudo(user.pseudo);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.parkingsService.findOne(+id);
+  }
+
+  @Get(':id/likes')
+  findLikesForParking(@Param('id') id: string) {
+    return this.parkingsService.getLikesForParking(+id);
+  }
+
+  @Get(':id/subscribes')
+  findSubscribesForParking(@Param('id') id: string) {
+    return this.parkingsService.getSubscribesForParking(+id);
   }
 
   @Patch(':id')
@@ -42,22 +46,15 @@ export class ParkingsController {
     return this.parkingsService.update(+id, updateParkingDto);
   }
 
-  @Post(':id')
-  @UseGuards(AuthGuard())
-  likeParking(@Param('id') id: string, @GetUser() user: User) {
-
-    return this.parkingsService.likeParking(+id, user.pseudo);
-  }
-
   @Delete(':id')
   @UseGuards(AuthGuard())
   async remove(@Param('id') id: string, @GetUser() user: User) {
-     const parkingToRemove = await this.findOne(id);
+    const parkingToRemove = await this.findOne(id);
     if (parkingToRemove.user_id !== user.user_id) {
       if (!user.admin) {
-      throw new UnauthorizedException('Droits insuffisant pour supprimer');
+        throw new UnauthorizedException('Droits insuffisant pour supprimer');
+      }
     }
-    }
-    return this.parkingsService.remove(+id);
+    return this.parkingsService.remove(+id, user.user_id);
   }
 }

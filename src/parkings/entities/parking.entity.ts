@@ -91,14 +91,6 @@ export class Parking {
   subscribes: Subscribe[];
 
   //relation like
-  @ManyToMany(() => User, (user) => user.likedParkings)
-  @JoinTable({
-    name: 'like',
-    joinColumn: { name: 'parking_id', referencedColumnName: 'parking_id' },
-    inverseJoinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'user_id',
-    },
-  })
+  @ManyToMany(() => User, (user) => user.likedParkings, {cascade:true})
   users: User[];
 }

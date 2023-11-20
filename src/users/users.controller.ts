@@ -37,7 +37,7 @@ export class UsersController {
     if (pseudo !== user.pseudo) {
       if (!user.admin) {
         throw new ForbiddenException(
-          `Vous ne detenez pas les droits supprimer ce profil.`,
+          `Vous ne detenez pas les droits pour supprimer ce profil.`,
         );
       }
     }

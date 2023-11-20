@@ -23,10 +23,6 @@ export class OpinionsService {
     return this.opinionsRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} opinion`;
-  }
-
   async findOpinionsByParkingId(parking_id: number) {
     const found = await this.opinionsRepository.find({
       where: { parking_id },

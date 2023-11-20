@@ -1,6 +1,5 @@
 import {
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -32,21 +31,26 @@ export class UsersService {
 
   async update(pseudo: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(pseudo);
+console.log(updateUserDto);
 
     //met à jour les parkings favoris
     if (user.likedParkings) {
-      user.likedParkings = updateUserDto.likedParking;
+      user.likedParkings = updateUserDto.likedParkings;
     }
 
     try {
       const updatedUser = this.usersRepository.merge(user, updateUserDto);
 
       const result = await this.usersRepository.save(updatedUser);
+      console.log('je suis ici');
+      
       return result;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('pseudo or email already exists');
       } else {
+        console.log(error);
+        
         throw new InternalServerErrorException();
       }
     }
@@ -54,13 +58,6 @@ export class UsersService {
 
   async remove(pseudo: string, user: User) {
     const userToDelete = await this.findOne(pseudo);
-    if (userToDelete.pseudo !== user.pseudo) {
-      if (!user.admin) {
-        throw new ForbiddenException(
-          `Vous ne detenez pas les droits supprimer ce profil.`,
-        );
-      }
-    }
 
     //supprime les données perso du user
     userToDelete.pseudo = `anonyme${userToDelete.user_id}`;
@@ -70,6 +67,7 @@ export class UsersService {
     userToDelete.password =
       '************************************************************';
     userToDelete.photo_id = null;
+    userToDelete.is_delete = true;
     userToDelete.likedParkings = [];
     userToDelete.subscribes = [];
 

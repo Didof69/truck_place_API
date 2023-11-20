@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateParkingDto } from './dto/create-parking.dto';
 import { UpdateParkingDto } from './dto/update-parking.dto';
 import { Parking } from './entities/parking.entity';
+import { Subscribe } from 'src/subscribes/entities/subscribe.entity';
 
 @Injectable()
 export class ParkingsService {
@@ -12,16 +13,11 @@ export class ParkingsService {
     @InjectRepository(Parking) private parkingsRepository: Repository<Parking>,
   ) {}
 
-  async create(createParkingDto: CreateParkingDto, user_id:number) {
+  async create(createParkingDto: CreateParkingDto, user_id: number) {
     const newParking = this.parkingsRepository.create(createParkingDto);
     newParking.user_id = user_id;
     const result = this.parkingsRepository.save(newParking);
     return result;
-  }
-
-  async likeParking(parking_id: number, pseudo: string) {
-
-    return
   }
 
   findAll() {
@@ -34,16 +30,6 @@ export class ParkingsService {
       throw new NotFoundException(`Parking with the id ${id} not found`);
     }
     return found;
-  }
-
-  async findLikedParkingByUserPseudo(userPseudo: string): Promise<Parking[]> {
-    const likedParkings = await this.parkingsRepository
-      .createQueryBuilder('parking')
-      .innerJoin('like', 'like', 'like.parking_id = parking.parking_id')
-      .innerJoin('user', 'user', 'user.user_id = like.user_id')
-      .where('user.pseudo = :userPseudo', { userPseudo })
-      .getMany();
-    return likedParkings
   }
 
   async update(id: number, updateParkingDto: UpdateParkingDto) {
@@ -63,9 +49,51 @@ export class ParkingsService {
     return result;
   }
 
-  async remove(id: number) {
-    const parking = await this.findOne(id);
-    const parkingRemoved = await this.parkingsRepository.remove(parking);
-    return parkingRemoved;
+  async getLikesForParking(parking_id: number) {
+    const query = `
+      SELECT "user"."user_id"
+      FROM "like"
+      INNER JOIN "user" ON "like"."user_id" = "user"."user_id"
+      WHERE "like"."parking_id" = $1
+    `;
+    return this.parkingsRepository.query(query, [parking_id]);
+  }
+
+  async getSubscribesForParking(parking_id: number) {
+    const query = `
+      SELECT "subscribe".*
+      FROM "subscribe"
+      WHERE "subscribe"."parking_id" = $1
+    `;
+    return this.parkingsRepository.query(query, [parking_id]);
+  }
+
+  //supprime les parkings
+  async remove(parking_id: number, user_id: number) {
+    const parking = await this.findOne(parking_id);
+
+    //supprime tous les favoris concernant le parking
+    const getLikesForParking = await this.getLikesForParking(parking_id);
+    getLikesForParking.forEach(() => {
+      const query = `
+      DELETE FROM "like"
+      WHERE "like"."parking_id" = $1 AND "like"."user_id" = $2
+    `;
+      this.parkingsRepository.query(query, [parking_id, user_id]);
+    });
+
+    //supprime tous les abonnements concernant le parking
+    const getSubscribesForParking =
+      await this.getSubscribesForParking(parking_id);
+    getSubscribesForParking.forEach((subscribe: Subscribe) => {
+      const query = `
+      DELETE FROM "subscribe"
+      WHERE "subscribe"."subscribe_id" = $1
+    `;
+      this.parkingsRepository.query(query, [subscribe.subscribe_id]);
+    });
+
+    //supprime le parking une fois les favoris et abonnements gérés
+    return this.parkingsRepository.remove(parking);
   }
 }

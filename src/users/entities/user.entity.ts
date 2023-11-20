@@ -44,7 +44,7 @@ export class User {
   subscribes: Subscribe[];
 
   //relation like
-  @ManyToMany(() => Parking, {eager: true, cascade:true})
+  @ManyToMany(() => Parking, {eager: true})
   @JoinTable({
     name: 'like',
     joinColumn: { name: 'user_id', referencedColumnName: 'user_id' },
