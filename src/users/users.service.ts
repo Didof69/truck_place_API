@@ -8,7 +8,6 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-// import { ParkingsService } from 'src/parkings/parkings.service';
 
 @Injectable()
 export class UsersService {
@@ -31,7 +30,6 @@ export class UsersService {
 
   async update(pseudo: string, updateUserDto: UpdateUserDto) {
     const user = await this.findOne(pseudo);
-console.log(updateUserDto);
 
     //met à jour les parkings favoris
     if (user.likedParkings) {
@@ -40,17 +38,12 @@ console.log(updateUserDto);
 
     try {
       const updatedUser = this.usersRepository.merge(user, updateUserDto);
-
       const result = await this.usersRepository.save(updatedUser);
-      console.log('je suis ici');
-      
       return result;
     } catch (error) {
       if (error.code === '23505') {
         throw new ConflictException('pseudo or email already exists');
       } else {
-        console.log(error);
-        
         throw new InternalServerErrorException();
       }
     }
@@ -71,8 +64,6 @@ console.log(updateUserDto);
     userToDelete.likedParkings = [];
     userToDelete.subscribes = [];
 
-    console.log(userToDelete);
-    
     // if (userToDelete.parkings) {
     //   userToDelete.parkings.forEach(parking => {
     //     if (!parking.public_view) {
