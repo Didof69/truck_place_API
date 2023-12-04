@@ -13,7 +13,8 @@ import { Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>, // private parkingsService: ParkingsService,
+    private usersRepository: Repository<User>,
+    // private parkingsService: ParkingsService,
   ) {}
 
   findAll() {
