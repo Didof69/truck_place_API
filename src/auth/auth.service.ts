@@ -44,7 +44,7 @@ export class AuthService {
       if (error.code === '23505') {
         throw new ConflictException('pseudo or email already exists');
       } else {
-        throw new InternalServerErrorException();
+        throw new InternalServerErrorException(error);
       }
     }
   }
